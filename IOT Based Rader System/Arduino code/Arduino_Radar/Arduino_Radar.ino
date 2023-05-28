@@ -1,6 +1,7 @@
 // Includes the Servo library
 #include <Servo.h>. 
 // Defines Tirg and Echo pins of the Ultrasonic Sensor
+int buzzer=4;
 const int trigPin = 10;
 const int echoPin = 11;
 // Variables for the duration and the distance
@@ -10,8 +11,9 @@ Servo myServo; // Creates a servo object for controlling the servo motor
 void setup() {
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
   pinMode(echoPin, INPUT); // Sets the echoPin as an Input
+  pinMode(buzzer,OUTPUT);
   Serial.begin(9600);
-  myServo.attach(7); // Defines on which pin is the servo motor attached
+  myServo.attach(6); // Defines on which pin is the servo motor attached
 }
 void loop() {
   // rotates the servo motor from 15 to 165 degrees
@@ -19,21 +21,39 @@ void loop() {
   myServo.write(i);
   delay(30);
   distance = calculateDistance();// Calls a function for calculating the distance measured by the Ultrasonic sensor for each degree
-  
+      
+      if(distance<=10 && distance>2)
+  {
+    digitalWrite(buzzer,HIGH);
+  }
+  else
+  {
+    digitalWrite(buzzer,LOW);
+  }
   Serial.print(i); // Sends the current degree into the Serial Port
   Serial.print(","); // Sends addition character right next to the previous value needed later in the Processing IDE for indexing
   Serial.print(distance); // Sends the distance value into the Serial Port
   Serial.print("."); // Sends addition character right next to the previous value needed later in the Processing IDE for indexing
+  
   }
   // Repeats the previous lines from 165 to 15 degrees
   for(int i=165;i>15;i--){  
   myServo.write(i);
   delay(30);
   distance = calculateDistance();
+   if(distance<=10 && distance>2 )
+  {
+    digitalWrite(buzzer,HIGH);
+  }
+  else
+  {
+    digitalWrite(buzzer,LOW);
+  }
   Serial.print(i);
   Serial.print(",");
   Serial.print(distance);
   Serial.print(".");
+ 
   }
 }
 // Function for calculating the distance measured by the Ultrasonic sensor
